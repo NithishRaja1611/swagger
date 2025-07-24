@@ -1,0 +1,39 @@
+# Ignore build artifacts
+**/bin
+**/obj
+
+# Ignore .NET user secrets
+**/secrets.dev.yaml
+**/values.dev.yaml
+
+# Ignore git and CI files
+.git
+.github/
+.gitignore
+
+# Ignore node/npm
+node_modules
+npm-debug.log
+
+# Ignore IDE and tool settings
+.vscode/
+.vs/
+**/*.user
+**/*.suo
+**/*.dbmdl
+
+# Ignore Docker and Kubernetes
+Dockerfile*
+docker-compose*
+charts/
+azds.yaml
+
+# Ignore docs & licenses
+LICENSE
+README.md
+
+# Ignore logs & temp files
+*.log
+*.swp
+*.tmp
+*.bak

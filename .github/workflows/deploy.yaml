@@ -1,0 +1,40 @@
+name: Build and Deploy ASP.NET to AKS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      IMAGE_NAME: aspnet-app
+      IMAGE_TAG: ${{ github.sha }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Azure ACR Login
+      run: az acr login --name nithish1611
+
+    - name: Build and Push Docker Image
+      run: |
+        docker build -t nithish1611.azurecr.io/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} ./CleanArchitectureDemo
+        docker push nithish1611.azurecr.io/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+
+    - name: Set AKS Context
+      run: |
+        az aks get-credentials --name ${{ secrets.AKS_CLUSTER_NAME }} --resource-group ${{ secrets.RESOURCE_GROUP }} --overwrite-existing
+
+    - name: Deploy to AKS
+      run: |
+        kubectl set image deployment/cleanarch aspnet-app=nithish1611.azurecr.io/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} || \
+        kubectl apply -f k8s/deployment.yaml

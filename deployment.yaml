@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cleanarch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cleanarch
+  template:
+    metadata:
+      labels:
+        app: cleanarch
+    spec:
+      containers:
+        - name: aspnet-app
+          image: nithish1611.azurecr.io/aspnet-app:v1.152
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+      imagePullSecrets:
+        - name: acr-secret
